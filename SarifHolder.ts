@@ -1,16 +1,17 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import csvParser from "csv-parser";
-import parse from "csv-parse";
-import { Result, ReportingDescriptor, MultiformatMessageString, Location, PhysicalLocation, ArtifactLocation, Region} from './sarif-schema';
-
-// type SarifVulnerabilityMapping = {
-//   Tool: string;
-//   RuleId: string;
-//   Vulnerability: string;
-//   Type: string;
-// };
+import csvParser = require('csv-parser');
+import {
+	Result,
+	ReportingDescriptor,
+	MultiformatMessageString,
+	Location,
+	PhysicalLocation,
+	ArtifactLocation,
+	Region,
+	LogicalLocation, Artifact, ToolComponent
+} from './sarif-schema';
 
 // const csvFilePath = path.resolve(__dirname, 'sarif_vulnerability_mapping.csv');
 
@@ -32,14 +33,12 @@ export class SarifHolder {
 		});
 	};
 	public parseResult(tool: string, vulnerability: string, level: string, uri: string, 
-		line: number, end_line: number, column: number, snippet: string, logicalLocation: string) {
+		line: number, snippet: string, logicalLocation: LogicalLocation) {
 		const identified =	this.identifyVulnerability(tool, vulnerability);
 		const parsedLevel : "none" | "note" | "warning" | "error" = this.parseLevel(level);
 		const artifactLocation : ArtifactLocation = {uri : uri};
 		const region : Region = {
 			startLine : line,
-			endLine : end_line,
-			startColumn: column,
 		}
 		const physicalLocation : PhysicalLocation = {
 			artifact_location : artifactLocation,
@@ -77,14 +76,14 @@ export class SarifHolder {
 			const longMessage: MultiformatMessageString = {text: fullDescription};
 			const reportingDescriptor : ReportingDescriptor = {
 				id: identified['RuleID'],
-				shortDescription: shortMessage,
+				shortDescription: {text: identified['Vulnerability']},
 				fullDescription: longMessage,
 				name: identified['Type'] + ' vulnerability',
 			};
 			return reportingDescriptor;
 		}
 	}
-	public identifyVulnerability(tool: string, vulnerability_msg: string) : object{
+	identifyVulnerability(tool: string, vulnerability_msg: string) : object{
 		const tool_vulnerabilities = this.VULNERABILITY_MAP[tool];
 		for (const vulnerability of tool_vulnerabilities) {
 			if (vulnerability_msg.includes(vulnerability.Vulnerability) || vulnerability.Vulnerability.includes(vulnerability_msg))  {
@@ -99,8 +98,8 @@ export class SarifHolder {
 	}
 
 //given a level produced by a tool, returns the level in SARIF format
- parseLevel(level: string) : "none" | "note" | "warning" | "error" {
-    if(level.toLowerCase() == "warning" || level.toLowerCase() == "warnings" || level.toLowerCase() == "medium"){
+	parseLevel(level: string) : "none" | "note" | "warning" | "error" {
+	if(level.toLowerCase() == "warning" || level.toLowerCase() == "warnings" || level.toLowerCase() == "medium"){
 			return "warning"
 		}
 		if(level.toLowerCase() == "error" || level.toLowerCase() == "violations" || level.toLowerCase() == "high"){
@@ -109,9 +108,32 @@ export class SarifHolder {
 		if(level.toLowerCase() == "note" || level.toLowerCase() == "conflicts" || level.toLowerCase() == "informational"){
 			return "note";
 		}
-    if(level.toLowerCase() == "none" || level.toLowerCase() == "safe"){
+		if(level.toLowerCase() == "none" || level.toLowerCase() == "safe"){
 			return "none";
 		}
-    return "warning"
+		return "warning"
+	}
+
+	parseLogicalLocation(name: string, kind: string): LogicalLocation {
+		return { name: name, kind: kind};
+	}
+
+	parseArtifact(uri: string, kind: string): Artifact {
+		return {
+			location: {uri: uri} as ArtifactLocation,
+			sourceLanguage: kind
+		};
+	}
+	parseToolComponent(rulesList: any[]): ToolComponent {
+		return {
+			name: "mythril",
+			version: '0.4.25',
+			rules: rulesList,
+			informationUri: "https://mythx.io/",
+			fullDescription: {
+				text: "Mythril analyses EVM bytecode using symbolic analysis, taint analysis " +
+					"and control flow checking to detect a variety of security vulnerabilities."
+			}
+		};
 	}
 }

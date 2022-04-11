@@ -1,4 +1,5 @@
 import { compile, compileFromFile } from 'json-schema-to-typescript'
+// @ts-ignore
 import fs from 'fs'
 
 // compile from file
