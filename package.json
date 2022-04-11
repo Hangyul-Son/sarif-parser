@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "csv-generate": "^4.0.4",
     "csv-parse": "^5.0.4",
     "csv-parser": "^3.0.0",
     "json-schema-to-typescript": "^10.1.5"
