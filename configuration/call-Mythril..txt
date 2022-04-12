@@ -1,0 +1,1 @@
+docker run -v $(pwd):/tmp mythril/ /tmp/test.sol --solv 0.6.8 -o jsonv2 --execution-timeout 10

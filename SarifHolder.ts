@@ -16,16 +16,18 @@ import {
 // const csvFilePath = path.resolve(__dirname, 'sarif_vulnerability_mapping.csv');
 
 export class SarifHolder {
-	VULNERABILITY_MAP : Object;
+	VULNERABILITY_MAP: object;
 	constructor() {
+		this.VULNERABILITY_MAP = {};
 		const headers = ["Tool", "RuleId", "Vulnerability", "Type"];
-		fs.createReadStream("sarif_vulnerability_mapping.csv")
+		fs.createReadStream("./configuration/sarif_vulnerability_mapping.csv")
 		.pipe(csvParser({ headers: headers }))
 		.on("data", (row: any) => {
-			if (this.VULNERABILITY_MAP[row.Tool] == undefined) {
-				this.VULNERABILITY_MAP[row.Tool] = [];
+			const tool = row['Tool']
+			if(!Object.keys(this.VULNERABILITY_MAP).includes(tool)) {
+				this.VULNERABILITY_MAP[tool] = [];
 			}
-			this.VULNERABILITY_MAP[row.Tool].push({
+			this.VULNERABILITY_MAP[tool].push({
 				RuleID: row["RuleId"],
 				Vulnerability: row["Vulnerability"],
 				Type: row["Type"],
