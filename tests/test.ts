@@ -1,9 +1,7 @@
-import {Mythril} from "./src/Mythril";
+import {Mythril} from "../src/Mythril";
 // @ts-ignore
 import * as fs from 'fs';
-import { Run, StaticAnalysisResultsFormatSARIFVersion210JSONSchema} from "./src/sarif-schema";
-import {SarifHolder} from "./src/SarifHolder";
-
+import { StaticAnalysisResultsFormatSARIFVersion210JSONSchema} from "../src/sarif-schema";
 
 async function main(): Promise<void> {
 	const filecontent = fs.readFileSync('Mythril_output.txt');
@@ -12,7 +10,10 @@ async function main(): Promise<void> {
 	try{
 			 mythril_outputs = JSON.parse(filecontent.toString());
 	} catch (e){
-			console.log("Error parsing JSON");
+		console.log(e+'\n');
+		console.log("Error parsing JSON\n");
+		console.log("Filecontent: " + filecontent);
+		return;
 	}
 	let runs = [];
 	let properties = {};
