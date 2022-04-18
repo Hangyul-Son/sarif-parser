@@ -1,7 +1,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import csvParser = require('csv-parser');
+import csvParser = require('csv-parser'); 
 import {
 	Result,
 	ReportingDescriptor,
@@ -15,71 +15,69 @@ import {
 
 // const csvFilePath = path.resolve(__dirname, 'sarif_vulnerability_mapping.csv');
 
+
 export class SarifHolder {
-	VULNERABILITY_MAP: object;
-	constructor() {
-		this.VULNERABILITY_MAP = {};
-		const headers = ["Tool", "RuleId", "Vulnerability", "Type"];
-		fs.createReadStream("./configuration/sarif_vulnerability_mapping.csv")
-		.pipe(csvParser({ headers: headers }))
-		.on("data", (row: any) => {
-			const tool = row['Tool']
-			if(!Object.keys(this.VULNERABILITY_MAP).includes(tool)) {
-				this.VULNERABILITY_MAP[tool] = [];
-			}
-			this.VULNERABILITY_MAP[tool].push({
-				RuleID: row["RuleId"],
-				Vulnerability: row["Vulnerability"],
-				Type: row["Type"],
+	VULNERABILITY_MAP : object;
+	constructor() {}
+	async readCSV() {
+		return new Promise<void>((resolve, reject) => {
+			const VULNERABILITY_MAP = {};
+			const headers = ["Tool", "RuleId", "Vulnerability", "Type"];
+			fs.readFileSync
+			fs.createReadStream("./configuration/sarif_vulnerability_mapping.csv")
+			.pipe(csvParser({ headers: headers }))
+			.on("data", (row: any) => {
+				const tool = row['Tool']
+				if(!Object.keys(VULNERABILITY_MAP).includes(tool)) {
+					VULNERABILITY_MAP[tool] = [];
+				}
+				VULNERABILITY_MAP[tool].push({
+					RuleID: row["RuleId"],
+					Vulnerability: row["Vulnerability"],
+					Type: row["Type"],
+				})
+			})
+			.on('end', () => {
+				this.VULNERABILITY_MAP = VULNERABILITY_MAP;
+				resolve();
 			})
 		});
-	};
+	}
 	public parseResult(tool: string, vulnerability: string, level: string, uri: string, 
 		line: number, snippet: string, logicalLocation: LogicalLocation) {
 		const identified =	this.identifyVulnerability(tool, vulnerability);
-		const parsedLevel : "none" | "note" | "warning" | "error" = this.parseLevel(level);
-		const artifactLocation : ArtifactLocation = {uri : uri};
-		const region : Region = {
-			startLine : line,
-		}
-		const physicalLocation : PhysicalLocation = {
-			artifact_location : artifactLocation,
-			region : region,
-			snippet : snippet
-		};
-		const location : Location[] = [{ 
-			physicalLocation : physicalLocation,
+		const location : Location[] = [{
+			physicalLocation : {
+				artifact_location: {uri: uri},
+				region: {startLine: line,},
+				snippet: snippet,
+			}
 		}];
 		// const locations : Location[] = [location];
 		//Logical Location out of control
-		const result : Result = {
-			ruleId : identified['RuleID'],
+		return  {
+			ruleId : identified['RuleId'],
 			message:  {text: identified['Vulnerability'],},
-			level: parsedLevel,
+			level: this.parseLevel(level),
 			locations : location,
 		}
-		return result;
 	}
-
 
 	public parseRule(tool: string, vulnerability: string, fullDescription?: string){
 		const identified = this.identifyVulnerability(tool, vulnerability);
 		if(!fullDescription){
-			const shortMessage: MultiformatMessageString = {text: identified['Vulnerability']};
 			const reportingDescriptor : ReportingDescriptor = {
-				id: identified['RuleID'],
-				shortDescription: shortMessage,
+				id: identified['RuleId'],
+				shortDescription: {text: identified['Vulnerability']},
 				name: identified['Type'] + ' vulnerability',
 			};
 			return reportingDescriptor;
 		}
 		else {
-			const shortMessage: MultiformatMessageString = {text: identified['Vulnerability']};
-			const longMessage: MultiformatMessageString = {text: fullDescription};
 			const reportingDescriptor : ReportingDescriptor = {
 				id: identified['RuleID'],
 				shortDescription: {text: identified['Vulnerability']},
-				fullDescription: longMessage,
+				fullDescription: {text: fullDescription},
 				name: identified['Type'] + ' vulnerability',
 			};
 			return reportingDescriptor;
@@ -87,13 +85,19 @@ export class SarifHolder {
 	}
 	identifyVulnerability(tool: string, vulnerability_msg: string) : object{
 		const tool_vulnerabilities = this.VULNERABILITY_MAP[tool];
-		for (const vulnerability of tool_vulnerabilities) {
-			if (vulnerability_msg.includes(vulnerability.Vulnerability) || vulnerability.Vulnerability.includes(vulnerability_msg))  {
-				return vulnerability;
+		console.log("vulnerability_msg: "+vulnerability_msg);
+		for (let i=0; i<tool_vulnerabilities.length; i++) {
+			let vulnerability = tool_vulnerabilities[i];
+			if (vulnerability_msg.includes(vulnerability.Vulnerability as string) || vulnerability.Vulnerability.includes(vulnerability_msg as string))  {
+				return {
+					RuleId: vulnerability.RuleID,
+					Vulnerability: vulnerability.Vulnerability,
+					Type: vulnerability.Type,
+				};
 			}
 		}
 		return {
-			RuleID: 'undefined',
+			RuleId: 'undefined',
 			Vulnerability: vulnerability_msg,
 			Type: 'undefined',
 		}
@@ -116,17 +120,18 @@ export class SarifHolder {
 		return "warning"
 	}
 
+
 	parseLogicalLocation(name: string, kind: string): LogicalLocation {
 		return { name: name, kind: kind};
 	}
 
 	parseArtifact(uri: string, kind: string): Artifact {
 		return {
-			location: {uri: uri} as ArtifactLocation,
+			location: {uri: uri},
 			sourceLanguage: kind
 		};
 	}
-	parseToolComponent(rulesList: any[]): ToolComponent {
+	parseToolComponent(rulesList: any): ToolComponent {
 		return {
 			name: "mythril",
 			version: '0.4.25',

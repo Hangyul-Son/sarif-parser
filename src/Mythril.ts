@@ -1,18 +1,20 @@
 import * as SarifHolder from './SarifHolder';
 import { ToolComponent, Run } from './sarif-schema'
 
+
 export class Mythril {
-    sarifHolder = new SarifHolder.SarifHolder();
+	sarifHolder: any;
   constructor() {
+		this.sarifHolder = new SarifHolder.SarifHolder();
 		let resultsList = [];
 		let logicalLocationList = [];
 		let rulesList = [];	
   }
-   parseSarif(output_results: any, file_path_in_repo: string) : Run {
+   async parseSarif(output_results: any, file_path_in_repo: string) : Promise<Run> {
+		 	await this.sarifHolder.readCSV();
       let resultsList = [];
       let logicalLocationsList = [];
       let rulesList = [];
-      console.log(output_results)
       const issues: [] = output_results["issues"];
       if(issues.length == 0) {
         return {
@@ -24,8 +26,8 @@ export class Mythril {
       }
       for (const issue of issues) {
           const logicalLocation = this.sarifHolder.parseLogicalLocation(issue['function'], "function")
-          const rule = this.sarifHolder.parseRule("mythril", issue["vulnerability"], issue["description"]);
-          const result = this.sarifHolder.parseResult("mythril", issue['title'], issue['type'], file_path_in_repo,
+          const rule = this.sarifHolder.parseRule("mythril", issue['swcTitle'], issue["description"]);
+          const result = this.sarifHolder.parseResult("mythril", issue['swcTitle'], issue['severity'], file_path_in_repo,
               issue['lineno'], (Object.keys(issue).includes('code')) ? issue['code'] : undefined,
               logicalLocation);
           if (!logicalLocationsList.includes(logicalLocation)) {
