@@ -1,13 +1,10 @@
-import * as SarifHolder from "./SarifHolder";
-import { ToolComponent, Run } from "./sarif-schema";
+import { SarifHolder } from "../SarifHolder";
+import { ToolComponent, Run } from "../sarif-schema";
 
 export class Mythril {
   sarifHolder: any;
   constructor() {
-    this.sarifHolder = new SarifHolder.SarifHolder();
-    let resultsList = [];
-    let logicalLocationList = [];
-    let rulesList = [];
+    this.sarifHolder = new SarifHolder();
   }
   async parseSarif(
     output_results: any,
@@ -42,8 +39,8 @@ export class Mythril {
         issue["severity"],
         file_path_in_repo,
         issue["lineno"],
-        Object.keys(issue).includes("code") ? issue["code"] : undefined,
-        logicalLocation
+        Object.keys(issue).includes("code") ? issue["code"] : undefined
+        // logicalLocation
       );
       if (!logicalLocationsList.includes(logicalLocation)) {
         logicalLocationsList.push(logicalLocation);
@@ -57,12 +54,22 @@ export class Mythril {
       file_path_in_repo,
       "solidity"
     );
-    const toolComponent = this.sarifHolder.parseToolComponent(rulesList);
+    const toolComponent = this.sarifHolder.parseToolComponent(
+      "Mythril",
+      "0.4.25",
+      rulesList,
+      "https://mythx.io",
+      {
+        text:
+          "Mythril analyses EVM bytecode using symbolic analysis, taint analysis " +
+          "and control flow checking to detect a variety of security vulnerabilities.",
+      }
+    );
     return {
-      tool: { driver: toolComponent },
       artifacts: [artifact],
       logicalLocations: logicalLocationsList,
       results: resultsList,
+      tool: { driver: toolComponent },
     };
   }
 }

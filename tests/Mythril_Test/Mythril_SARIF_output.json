@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "runs": [
+    {
+      "artifacts": [
+        {
+          "location": {
+            "uri": "Mythril_Test/Mythril_output.txt"
+          },
+          "sourceLanguage": "solidity"
+        }
+      ],
+      "logicalLocations": [
+        {
+          "kind": "function"
+        },
+        {
+          "kind": "function"
+        },
+        {
+          "kind": "function"
+        },
+        {
+          "kind": "function"
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "undefined",
+          "message": {
+            "text": "Weak Sources of Randomness from Chain Attributes"
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Mythril_Test/Mythril_output.txt"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "undefined",
+          "message": {
+            "text": "Weak Sources of Randomness from Chain Attributes"
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Mythril_Test/Mythril_output.txt"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "undefined",
+          "message": {
+            "text": "Authorization through tx.origin"
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Mythril_Test/Mythril_output.txt"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "undefined",
+          "message": {
+            "text": "Authorization through tx.origin"
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Mythril_Test/Mythril_output.txt"
+                },
+                "region": {}
+              }
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Mythril",
+          "version": "0.4.25",
+          "rules": [
+            {
+              "shortDescription": {
+                "text": "Weak Sources of Randomness from Chain Attributes"
+              },
+              "fullDescription": {
+                "text": {
+                  "head": "A control flow decision is made based on The block.number environment variable.",
+                  "tail": "The block.number environment variable is used to determine a control flow decision. Note that the values of variables like coinbase, gaslimit, block number and timestamp are predictable and can be manipulated by a malicious miner. Also keep in mind that attackers know hashes of earlier blocks. Don't use any of those environment variables as sources of randomness and be aware that use of these variables introduces a certain level of trust into miners."
+                }
+              },
+              "name": "undefined vulnerability"
+            },
+            {
+              "shortDescription": {
+                "text": "Weak Sources of Randomness from Chain Attributes"
+              },
+              "fullDescription": {
+                "text": {
+                  "head": "A control flow decision is made based on The block.number environment variable.",
+                  "tail": "The block.number environment variable is used to determine a control flow decision. Note that the values of variables like coinbase, gaslimit, block number and timestamp are predictable and can be manipulated by a malicious miner. Also keep in mind that attackers know hashes of earlier blocks. Don't use any of those environment variables as sources of randomness and be aware that use of these variables introduces a certain level of trust into miners."
+                }
+              },
+              "name": "undefined vulnerability"
+            },
+            {
+              "shortDescription": {
+                "text": "Authorization through tx.origin"
+              },
+              "fullDescription": {
+                "text": {
+                  "head": "Use of tx.origin as a part of authorization control.",
+                  "tail": "The tx.origin environment variable has been found to influence a control flow decision. Note that using tx.origin as a security control might cause a situation where a user inadvertently authorizes a smart contract to perform an action on their behalf. It is recommended to use msg.sender instead."
+                }
+              },
+              "name": "undefined vulnerability"
+            },
+            {
+              "shortDescription": {
+                "text": "Authorization through tx.origin"
+              },
+              "fullDescription": {
+                "text": {
+                  "head": "Use of tx.origin as a part of authorization control.",
+                  "tail": "The tx.origin environment variable has been found to influence a control flow decision. Note that using tx.origin as a security control might cause a situation where a user inadvertently authorizes a smart contract to perform an action on their behalf. It is recommended to use msg.sender instead."
+                }
+              },
+              "name": "undefined vulnerability"
+            }
+          ],
+          "informationUri": "0.4.25",
+          "fullDescription": {
+            "text": "Mythril analyses EVM bytecode using symbolic analysis, taint analysis and control flow checking to detect a variety of security vulnerabilities."
+          }
+        }
+      }
+    }
+  ],
+  "version": "2.1.0",
+  "properties": {}
+}

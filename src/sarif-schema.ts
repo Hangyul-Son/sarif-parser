@@ -193,7 +193,7 @@ export interface Run {
         [k: string]: MultiformatMessageString;
       };
       /**
-       * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
+       * An array of reportingDescriptor objects relevant to the notifications related to the config and runtime execution of the tool component.
        */
       notifications?: ReportingDescriptor[];
       /**
@@ -479,7 +479,7 @@ export interface Run {
           [k: string]: MultiformatMessageString;
         };
         /**
-         * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
+         * An array of reportingDescriptor objects relevant to the notifications related to the config and runtime execution of the tool component.
          */
         notifications?: ReportingDescriptor[];
         /**
@@ -689,7 +689,7 @@ export interface Run {
        */
       toolExecutionNotifications?: Notification[];
       /**
-       * A list of conditions detected by the tool that are relevant to the tool's configuration.
+       * A list of conditions detected by the tool that are relevant to the tool's config.
        */
       toolConfigurationNotifications?: Notification[];
       /**
@@ -1365,7 +1365,7 @@ export interface ReportingDescriptor {
     [k: string]: MultiformatMessageString;
   };
   /**
-   * Default reporting configuration information.
+   * Default reporting config information.
    */
   defaultConfiguration?: {
     /**
@@ -1381,7 +1381,7 @@ export interface ReportingDescriptor {
      */
     rank?: number;
     /**
-     * Contains configuration information specific to a report.
+     * Contains config information specific to a report.
      */
     parameters?: {
       /**
@@ -1391,7 +1391,7 @@ export interface ReportingDescriptor {
       [k: string]: unknown;
     };
     /**
-     * Key/value pairs that provide additional information about the reporting configuration.
+     * Key/value pairs that provide additional information about the reporting config.
      */
     properties?: {
       /**
@@ -1654,7 +1654,7 @@ export interface ToolComponent {
     [k: string]: MultiformatMessageString;
   };
   /**
-   * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
+   * An array of reportingDescriptor objects relevant to the notifications related to the config and runtime execution of the tool component.
    */
   notifications?: ReportingDescriptor[];
   /**
@@ -1849,7 +1849,7 @@ export interface Invocation {
    */
   toolExecutionNotifications?: Notification[];
   /**
-   * A list of conditions detected by the tool that are relevant to the tool's configuration.
+   * A list of conditions detected by the tool that are relevant to the tool's config.
    */
   toolConfigurationNotifications?: Notification[];
   /**
@@ -2144,7 +2144,7 @@ export interface ConfigurationOverride {
      */
     rank?: number;
     /**
-     * Contains configuration information specific to a report.
+     * Contains config information specific to a report.
      */
     parameters?: {
       /**
@@ -2154,7 +2154,7 @@ export interface ConfigurationOverride {
       [k: string]: unknown;
     };
     /**
-     * Key/value pairs that provide additional information about the reporting configuration.
+     * Key/value pairs that provide additional information about the reporting config.
      */
     properties?: {
       /**
@@ -2165,7 +2165,7 @@ export interface ConfigurationOverride {
     };
   };
   /**
-   * A reference used to locate the descriptor whose configuration was overridden.
+   * A reference used to locate the descriptor whose config was overridden.
    */
   descriptor:
     | {
@@ -2178,7 +2178,7 @@ export interface ConfigurationOverride {
         [k: string]: unknown;
       };
   /**
-   * Key/value pairs that provide additional information about the configuration override.
+   * Key/value pairs that provide additional information about the config override.
    */
   properties?: {
     /**
@@ -3099,7 +3099,13 @@ export interface Result {
   /**
    * A value that categorizes results by evaluation state.
    */
-  kind?: "notApplicable" | "pass" | "fail" | "review" | "open" | "informational";
+  kind?:
+    | "notApplicable"
+    | "pass"
+    | "fail"
+    | "review"
+    | "open"
+    | "informational";
   /**
    * A value specifying the severity level of the result.
    */
@@ -4736,7 +4742,7 @@ export interface ExternalProperties {
           [k: string]: MultiformatMessageString;
         };
         /**
-         * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
+         * An array of reportingDescriptor objects relevant to the notifications related to the config and runtime execution of the tool component.
          */
         notifications?: ReportingDescriptor[];
         /**
@@ -4946,7 +4952,7 @@ export interface ExternalProperties {
        */
       toolExecutionNotifications?: Notification[];
       /**
-       * A list of conditions detected by the tool that are relevant to the tool's configuration.
+       * A list of conditions detected by the tool that are relevant to the tool's config.
        */
       toolConfigurationNotifications?: Notification[];
       /**
@@ -5378,7 +5384,7 @@ export interface ExternalProperties {
       [k: string]: MultiformatMessageString;
     };
     /**
-     * An array of reportingDescriptor objects relevant to the notifications related to the configuration and runtime execution of the tool component.
+     * An array of reportingDescriptor objects relevant to the notifications related to the config and runtime execution of the tool component.
      */
     notifications?: ReportingDescriptor[];
     /**

@@ -24,7 +24,7 @@ export class SarifHolder {
       const VULNERABILITY_MAP = {};
       const headers = ["Tool", "RuleId", "Vulnerability", "Type"];
       fs.readFileSync;
-      fs.createReadStream("../configuration/sarif_vulnerability_mapping.csv")
+      fs.createReadStream("../config/sarif_vulnerability_mapping.csv")
         .pipe(csvParser({ headers: headers }))
         .on("data", (row: any) => {
           const tool = row["Tool"];
@@ -49,8 +49,8 @@ export class SarifHolder {
     level: string,
     uri: string,
     line: number,
-    snippet: string,
-    logicalLocation: LogicalLocation
+    snippet?: string
+    // logicalLocation: LogicalLocation
   ) {
     const identified = this.identifyVulnerability(tool, vulnerability);
     const location: Location[] = [
@@ -147,27 +147,29 @@ export class SarifHolder {
     return "warning";
   }
 
-  parseLogicalLocation(name: string, kind: string): LogicalLocation {
+  parseLogicalLocation(name: string, kind?: string): LogicalLocation {
     return { name: name, kind: kind };
   }
 
-  parseArtifact(uri: string, kind: string): Artifact {
+  parseArtifact(uri: string, kind?: string): Artifact {
     return {
       location: { uri: uri },
       sourceLanguage: kind,
     };
   }
-  parseToolComponent(rulesList: any): ToolComponent {
+  parseToolComponent(
+    name: string,
+    version: string,
+    rulesList: any,
+    informationURI: string,
+    fullDescription: any
+  ): ToolComponent {
     return {
-      name: "mythril",
+      name: name,
       version: "0.4.25",
       rules: rulesList,
-      informationUri: "https://mythx.io/",
-      fullDescription: {
-        text:
-          "Mythril analyses EVM bytecode using symbolic analysis, taint analysis " +
-          "and control flow checking to detect a variety of security vulnerabilities.",
-      },
+      informationUri: version,
+      fullDescription: fullDescription,
     };
   }
 }

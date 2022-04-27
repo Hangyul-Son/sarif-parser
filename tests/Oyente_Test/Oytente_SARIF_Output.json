@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "runs": [
+    {
+      "artifacts": [
+        {
+          "location": {
+            "uri": "Oyente_Test/Oyente_Output.txt"
+          },
+          "sourceLanguage": "Solidity"
+        }
+      ],
+      "logicalLocations": [
+        {
+          "name": "EthTxOrderDependenceMinimal"
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "FrontRunning_6",
+          "message": {
+            "text": "Transaction-Ordering Dependency."
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Oyente_Test/Oyente_Output.txt"
+                },
+                "region": {
+                  "startLine": "23"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "FrontRunning_6",
+          "message": {
+            "text": "Transaction-Ordering Dependency."
+          },
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifact_location": {
+                  "uri": "Oyente_Test/Oyente_Output.txt"
+                },
+                "region": {
+                  "startLine": "31"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Oyente",
+          "version": "0.4.25",
+          "rules": [
+            {
+              "id": "FrontRunning_6",
+              "shortDescription": {
+                "text": "Transaction-Ordering Dependency."
+              },
+              "name": "FrontRunning vulnerability"
+            },
+            {
+              "id": "FrontRunning_6",
+              "shortDescription": {
+                "text": "Transaction-Ordering Dependency."
+              },
+              "name": "FrontRunning vulnerability"
+            }
+          ],
+          "informationUri": "0.4.25",
+          "fullDescription": {
+            "text": "Oyente runs on symbolic execution, determines which inputs cause which program branches to execute, to find potential security vulnerabilities. Oyente works directly with EVM bytecode without access high level representation and does not provide soundness nor completeness."
+          }
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}
