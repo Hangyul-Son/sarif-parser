@@ -57,5 +57,7 @@ async function testMythril(): Promise<void> {
   );
 }
 
+function test() {}
+
 testOyente();
 testMythril();

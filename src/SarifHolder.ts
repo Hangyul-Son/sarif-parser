@@ -2,13 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import csvParser = require("csv-parser");
 import {
-  Result,
   ReportingDescriptor,
-  MultiformatMessageString,
   Location,
-  PhysicalLocation,
-  ArtifactLocation,
-  Region,
   LogicalLocation,
   Artifact,
   ToolComponent,
