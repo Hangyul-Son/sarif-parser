@@ -3,6 +3,7 @@ const fs = require("fs");
 const { execSync } = require("child_process");
 
 const attacks = fs.readdirSync("./dataset2");
+
 async function run() {
   console.log("Starting Mythril security analysis upon src/dataset2");
   for (const file in attacks) {
@@ -50,16 +51,16 @@ async function mythrilExecute(
   contractName: string
 ): Promise<void> {
   if (fileName === contractName + ".sol") {
-    console.log("Starting Mytrhil analysis of " + fileName);
-    console.log("Mount point: " + process.cwd() + "/tmp/" + fileName + "\n");
-    let mythrilResult;
-    mythrilResult = execSync(
+    console.log("\n\nStarting Mytrhil analysis of " + fileName);
+    const accessPoint = filePath.substring(1) + "/" + fileName;
+    let mythrilResult = execSync(
       "docker run -v $(pwd):/tmp mythril/myth analyze /tmp/" +
-        fileName +
-        " -o jsonv2 --max-depth 15"
+        accessPoint +
+        " -o jsonv2 --max-depth 15",
+      { stdio: "inherit" }
     );
     fs.writeFileSync(
-      filePath + "/" + contractName + "1.log",
+      filePath + "/" + contractName + ".log",
       mythrilResult.toString()
     );
     return;

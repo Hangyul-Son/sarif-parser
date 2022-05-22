@@ -42,7 +42,16 @@ export class Mythril {
         Object.keys(issue).includes("code") ? issue["code"] : undefined
         // logicalLocation
       );
-      if (!logicalLocationsList.includes(logicalLocation)) {
+      if (
+        (logicalLocationsList) => {
+          for (let i = 0; i < logicalLocationsList.length; i++) {
+            if (logicalLocationsList[i].name === logicalLocation.name) {
+              return false;
+            }
+            return true;
+          }
+        }
+      ) {
         logicalLocationsList.push(logicalLocation);
       }
       resultsList.push(result);
